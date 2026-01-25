@@ -51,18 +51,29 @@ function GameCard({ game, round }: { game: Game; round: string }) {
   const isWinner2 = game.winner?.includes(game.team2.split('(')[0].trim());
   
   return (
-    <div className="bg-gray-800 rounded-lg p-4 mb-3 border border-gray-700 hover:border-gray-600 transition-all">
-      <div className="text-xs text-gray-400 mb-2 font-semibold uppercase">{round}</div>
-      <div className={`flex justify-between items-center mb-2 ${isWinner1 ? 'text-green-400 font-bold' : 'text-gray-300'}`}>
-        <span>{game.team1}</span>
-        <span className="text-lg">{game.score1}</span>
+    <div className="bg-card border border-border p-4 mb-3 hover:border-accent-orange transition-colors duration-200">
+      <div className="spec-tag mb-3">{round}</div>
+      
+      <div className={`flex justify-between items-center mb-2 transition-colors ${
+        isWinner1 ? 'text-accent-orange' : 'text-foreground'
+      }`}>
+        <span className="font-medium">{game.team1}</span>
+        <span className="font-mono text-2xl font-bold">{game.score1}</span>
       </div>
-      <div className={`flex justify-between items-center ${isWinner2 ? 'text-green-400 font-bold' : 'text-gray-300'}`}>
-        <span>{game.team2}</span>
-        <span className="text-lg">{game.score2}</span>
+      
+      <div className="w-full h-px bg-border my-2" />
+      
+      <div className={`flex justify-between items-center transition-colors ${
+        isWinner2 ? 'text-accent-orange' : 'text-foreground'
+      }`}>
+        <span className="font-medium">{game.team2}</span>
+        <span className="font-mono text-2xl font-bold">{game.score2}</span>
       </div>
+      
       {game.overtime && (
-        <div className="text-xs text-yellow-400 mt-2 font-semibold">OVERTIME</div>
+        <div className="mt-3 pt-2 border-t border-border">
+          <span className="spec-tag text-accent-orange">OVERTIME</span>
+        </div>
       )}
     </div>
   );
@@ -70,18 +81,24 @@ function GameCard({ game, round }: { game: Game; round: string }) {
 
 function ChampionshipCard({ team1, team2, time, conference }: { team1: string; team2: string; time: string; conference: string }) {
   return (
-    <div className="bg-gradient-to-br from-blue-900 to-purple-900 rounded-lg p-6 border-2 border-blue-500 shadow-lg">
-      <div className="text-center mb-4">
-        <div className="text-sm text-blue-300 font-semibold uppercase tracking-wide">{conference} Championship</div>
-        <div className="text-xs text-gray-300 mt-1">Today - {time}</div>
+    <div className="bg-card border-2 border-accent-orange p-6">
+      <div className="text-center mb-6">
+        <div className="spec-tag text-accent-orange mb-2">{conference} CHAMPIONSHIP</div>
+        <div className="font-mono text-xs uppercase tracking-spec-wide text-muted-foreground">{time}</div>
+        <div className="spec-rule-accent mx-auto mt-4" />
       </div>
-      <div className="space-y-3">
-        <div className="bg-gray-800/50 rounded p-3 text-center">
-          <div className="text-lg font-bold text-white">{team1}</div>
+      
+      <div className="space-y-4">
+        <div className="bg-muted border border-border p-4 text-center hover:border-accent-orange transition-colors">
+          <div className="text-lg font-semibold uppercase tracking-spec-normal text-foreground">{team1}</div>
         </div>
-        <div className="text-center text-2xl text-gray-400">VS</div>
-        <div className="bg-gray-800/50 rounded p-3 text-center">
-          <div className="text-lg font-bold text-white">{team2}</div>
+        
+        <div className="text-center">
+          <span className="font-mono text-2xl font-bold text-muted-foreground">VS</span>
+        </div>
+        
+        <div className="bg-muted border border-border p-4 text-center hover:border-accent-orange transition-colors">
+          <div className="text-lg font-semibold uppercase tracking-spec-normal text-foreground">{team2}</div>
         </div>
       </div>
     </div>
@@ -92,71 +109,96 @@ export default function Home() {
   const [selectedConference, setSelectedConference] = useState<'AFC' | 'NFC' | 'both'>('both');
 
   return (
-    <main className="min-h-screen p-4 md:p-8">
+    <main className="min-h-screen p-4 md:p-8 bg-background">
       <div className="max-w-7xl mx-auto">
-        <header className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-            NFL Playoff Bracket 2025-26
+        {/* Header */}
+        <header className="text-center mb-12">
+          <span className="spec-tag block mb-4">NFL PLAYOFF TRACKER</span>
+          
+          <h1 className="text-4xl md:text-6xl font-semibold uppercase tracking-spec-wide text-foreground mb-4">
+            2025-26 SEASON
           </h1>
-          <p className="text-gray-400">Conference Championships - January 25, 2026</p>
-          <p className="text-sm text-gray-500 mt-1">Super Bowl LX • Feb 8 • Levi's Stadium</p>
+          
+          <div className="spec-rule-accent mx-auto mb-6" />
+          
+          <div className="font-mono text-xs uppercase tracking-spec-wide text-muted-foreground">
+            Conference Championships — January 25, 2026
+          </div>
+          <div className="font-mono text-xs uppercase tracking-spec-wide text-muted-foreground mt-1">
+            Super Bowl LX • Feb 8 • Levi's Stadium
+          </div>
         </header>
 
-        <div className="flex justify-center gap-2 mb-8">
+        {/* Conference Toggle */}
+        <div className="flex justify-center gap-0 mb-12 border border-border w-fit mx-auto">
           <button
             onClick={() => setSelectedConference('both')}
-            className={`px-6 py-2 rounded-lg font-semibold transition-all ${
+            className={`px-8 py-3 font-mono text-xs uppercase tracking-spec-wide font-medium transition-all ${
               selectedConference === 'both'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                ? 'bg-accent-orange text-white'
+                : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted'
             }`}
           >
             Both
           </button>
+          <div className="w-px bg-border" />
           <button
             onClick={() => setSelectedConference('AFC')}
-            className={`px-6 py-2 rounded-lg font-semibold transition-all ${
+            className={`px-8 py-3 font-mono text-xs uppercase tracking-spec-wide font-medium transition-all ${
               selectedConference === 'AFC'
-                ? 'bg-red-600 text-white'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                ? 'bg-accent-orange text-white'
+                : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted'
             }`}
           >
             AFC
           </button>
+          <div className="w-px bg-border" />
           <button
             onClick={() => setSelectedConference('NFC')}
-            className={`px-6 py-2 rounded-lg font-semibold transition-all ${
+            className={`px-8 py-3 font-mono text-xs uppercase tracking-spec-wide font-medium transition-all ${
               selectedConference === 'NFC'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                ? 'bg-accent-orange text-white'
+                : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted'
             }`}
           >
             NFC
           </button>
         </div>
 
+        {/* Bracket Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* AFC */}
           {(selectedConference === 'AFC' || selectedConference === 'both') && (
             <div>
-              <h2 className="text-3xl font-bold mb-6 text-red-500">AFC</h2>
+              <div className="mb-8">
+                <h2 className="text-3xl font-semibold uppercase tracking-spec-normal text-foreground mb-2">
+                  AFC
+                </h2>
+                <div className="spec-rule mb-6" />
+              </div>
               
               <div className="mb-8">
-                <h3 className="text-xl font-semibold mb-4 text-gray-300">Wild Card Round</h3>
+                <h3 className="font-mono text-sm uppercase tracking-spec-wide text-muted-foreground mb-4">
+                  Wild Card Round
+                </h3>
                 {bracketData.afc.wildcard.map((game, idx) => (
-                  <GameCard key={idx} game={game} round={`Wild Card ${idx + 1}`} />
+                  <GameCard key={idx} game={game} round={`WILD CARD ${idx + 1}`} />
                 ))}
               </div>
 
               <div className="mb-8">
-                <h3 className="text-xl font-semibold mb-4 text-gray-300">Divisional Round</h3>
+                <h3 className="font-mono text-sm uppercase tracking-spec-wide text-muted-foreground mb-4">
+                  Divisional Round
+                </h3>
                 {bracketData.afc.divisional.map((game, idx) => (
-                  <GameCard key={idx} game={game} round={`Divisional ${idx + 1}`} />
+                  <GameCard key={idx} game={game} round={`DIVISIONAL ${idx + 1}`} />
                 ))}
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold mb-4 text-gray-300">Conference Championship</h3>
+                <h3 className="font-mono text-sm uppercase tracking-spec-wide text-muted-foreground mb-4">
+                  Conference Championship
+                </h3>
                 <ChampionshipCard 
                   team1={bracketData.afc.championship.team1}
                   team2={bracketData.afc.championship.team2}
@@ -170,24 +212,35 @@ export default function Home() {
           {/* NFC */}
           {(selectedConference === 'NFC' || selectedConference === 'both') && (
             <div>
-              <h2 className="text-3xl font-bold mb-6 text-blue-500">NFC</h2>
+              <div className="mb-8">
+                <h2 className="text-3xl font-semibold uppercase tracking-spec-normal text-foreground mb-2">
+                  NFC
+                </h2>
+                <div className="spec-rule mb-6" />
+              </div>
               
               <div className="mb-8">
-                <h3 className="text-xl font-semibold mb-4 text-gray-300">Wild Card Round</h3>
+                <h3 className="font-mono text-sm uppercase tracking-spec-wide text-muted-foreground mb-4">
+                  Wild Card Round
+                </h3>
                 {bracketData.nfc.wildcard.map((game, idx) => (
-                  <GameCard key={idx} game={game} round={`Wild Card ${idx + 1}`} />
+                  <GameCard key={idx} game={game} round={`WILD CARD ${idx + 1}`} />
                 ))}
               </div>
 
               <div className="mb-8">
-                <h3 className="text-xl font-semibold mb-4 text-gray-300">Divisional Round</h3>
+                <h3 className="font-mono text-sm uppercase tracking-spec-wide text-muted-foreground mb-4">
+                  Divisional Round
+                </h3>
                 {bracketData.nfc.divisional.map((game, idx) => (
-                  <GameCard key={idx} game={game} round={`Divisional ${idx + 1}`} />
+                  <GameCard key={idx} game={game} round={`DIVISIONAL ${idx + 1}`} />
                 ))}
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold mb-4 text-gray-300">Conference Championship</h3>
+                <h3 className="font-mono text-sm uppercase tracking-spec-wide text-muted-foreground mb-4">
+                  Conference Championship
+                </h3>
                 <ChampionshipCard 
                   team1={bracketData.nfc.championship.team1}
                   team2={bracketData.nfc.championship.team2}
@@ -199,8 +252,13 @@ export default function Home() {
           )}
         </div>
 
-        <footer className="mt-12 text-center text-gray-500 text-sm">
-          <p>Built with Next.js & Tailwind CSS</p>
+        {/* Footer */}
+        <footer className="mt-16 pt-8 border-t border-border">
+          <div className="text-center">
+            <div className="font-mono text-xs uppercase tracking-spec-wide text-muted-foreground">
+              Built with Next.js & Tailwind CSS
+            </div>
+          </div>
         </footer>
       </div>
     </main>
